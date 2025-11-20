@@ -1,82 +1,36 @@
-# 🧠 MedRemind AI — AI Asosidagi Dori Eslatma Telegram Bot
-
-## 📌 1. Loyihaning Umumiy Maqsadi
-
-**MedRemind AI** — foydalanuvchilarga dori-darmonlarni **o‘z vaqtida ichishni eslatadigan**, AI yordamida **dorilar haqida batafsil tibbiy maʼlumot beradigan**, hamda dori kurslarini boshqaradigan **zamonaviy Telegram bot loyihasi**.
-
-Loyiha hech qanday web-framework (**Django**, **FastAPI**) ishlatmaydi. Faqat:
-
-* **aiogram** — Telegram bot yaratish uchun
-* **PostgreSQL** — maʼlumotlar bazasi uchun
-* **apscheduler** — rejalashtirilgan eslatmalar uchun
-* **OpenAI API** — AI asosidagi dori maʼlumotlarini yaratish uchun
-
-### 🔹 Botning asosiy vazifalari
-
-* Foydalanuvchidan **doktor tomonidan yozilgan retsept** asosida:
-
-  * Dorining nomi
-  * Necha mahal ichiladi
-  * Qaysi vaqtlarda ichiladi
-  * Ovqatdan oldin/ovqatdan keyin/inson ovqatlanayotganda ichish holati
-    kabi maʼlumotlarni qabul qiladi.
-
-* Belgilangan vaqt kelganda avtomatik tarzda **eslatma yuboradi**.
-
-* Foydalanuvchi **“Ichdim”** tugmasini bosmaguncha bot **har 5 daqiqada** takroriy eslatma yuboradi.
-
-* “**Dori haqida**” tugmasi bosilganda foydalanuvchi dorining nomini yuboradi, bot esa AI orqali quyidagi maʼlumotlarni taqdim etadi:
-
-  * Tarkibi
-  * Qaysi kasalliklarda ishlatilishi
-  * Qanday tartibda ichilishi
-  * Dozalash bo‘yicha yo‘riqnoma
-  * Yon taʼsirlari
-
-* Foydalanuvchi umumiy simptom bo‘yicha savol bersa:
-
-  **Misol:** “Mening boshim og‘riyapti, qanday dorini maslahat berasan?”
-
-  AI foydalanuvchi shikoyatini tahlil qilib, mos dorilarni tavsiya qiladi.
+Ajoyib, tushundim. Siz xohlaysizki, hujjat **avval loyihaning umumiy tuzilishi va strukturasini** ko‘rsatib, keyin **har bir fayl va dasturchi vazifalari**, va **til tanlaganda foydalanuvchiga qanday xabar chiqishi**ni ham aniq namuna bilan kiritaylik. Mana to‘liq, rasmiy va tartibli variant:
 
 ---
 
-## 🏗 2. Loyiha Arxitekturasi
+# 🧠 MedRemind AI — Telegram Bot Loyiha Taqriznomasi
 
-Loyiha quyidagi 4 ta asosiy moduldan tashkil topgan:
+## 1. Loyiha Maqsadi
 
-### **1) Telegram Bot (Aiogram)**
+**MedRemind AI** foydalanuvchilarga:
 
-* Foydalanuvchi bilan muloqot
-* Dori qidirish
-* Kurs qo‘shish
-* Eslatma yuborish
-* “Ichdim” tugmasi boshqaruvi
-* Statistika chiqarish
+* dori-darmonlarni o‘z vaqtida ichishni eslatish,
+* AI orqali dorilar haqida batafsil ma’lumot berish,
+* dori kurslarini yaratish va boshqarish imkonini beradi.
 
-### **2) PostgreSQL Database Layer (dbx/)**
+Bot foydalanuvchi retsepti asosida quyidagilarni boshqaradi:
 
-* SQL jadvallarni yaratish
-* CRUD amallar
-* Foydalanuvchining dorilari
-* Dori AI kesh
-* Log yozish
+* Dorining nomi
+* Necha mahal ichilishi
+* Qaysi vaqtda ichilishi
+* Ovqatdan oldin yoki keyin ichilishi
 
-### **3) Scheduler (APScheduler)**
+Bundan tashqari, foydalanuvchi AI orqali dorining tarkibi, ishlatilish sohasi, doza, ichish tartibi, yon ta’sirlari va simptom bo‘yicha mos dorilar tavsiyasini oladi.
 
-* Dori vaqtlari bo‘yicha job yaratadi
-* Eslatma yuboradi
-* “Ichdim” tugmasi bosilmaguncha 5 daqiqada takrorlaydi
+**Asosiy imkoniyatlar:**
 
-### **4) OpenAI AI Module**
-
-* Dorilar haqida AI asosida tibbiy izoh
-* Simptom bo‘yicha mos dori tavsiyasi
-* Keshga yozish (tez ishlashi uchun)
+* Dorilar haqida ma’lumot olish
+* Dori kursi yaratish va boshqarish
+* Eslatma yuborish va “Ichdim” logini saqlash
+* Kunlik va oylik statistikalarni ko‘rish
 
 ---
 
-## 📂 3. To‘liq Papka Struktura
+## 2. Loyihaning Strukturasining Tavsifi
 
 ```
 medremind_ai/
@@ -114,53 +68,91 @@ medremind_ai/
 │── README.md
 ```
 
+**Izoh:**
+
+* `bot.py` — Telegram botni ishga tushirish
+* `config.py` — konfiguratsiya (token, DB, API key)
+* `scheduler.py` — eslatma tizimi
+* `ai_client.py` — AI integratsiyasi va caching
+* `dbx/` — ma’lumotlar bazasi modullari
+* `handlers/` — foydalanuvchi xabarlarini qayta ishlash
+* `utils/` — yordamchi funksiyalar va tugmalar
+
 ---
 
-## 📘 4. Har Bir Faylning Vazifasi
+## 3. Til Tanlash UI va Namuna Xabarlar
 
-### 🔹 **bot.py**
+Foydalanuvchi `/start` tugmasini bosganda 4 ta til tanlash tugmasi chiqadi:
 
-Botni ishga tushirish, event loop, dispatcher va handlerlarni ulash.
+| Emoji | Til               | Namuna xabar                                                                                                                                                                                                                                                                                                                                   |
+| ----- | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 🇺🇿  | O‘zbekcha (Lotin) | Assalomu aleykum! 👋\nMen sizga dori-darmonlarni o'z vaqtida ichishni eslatib turish, dorilar haqida AI orqali ma'lumot berish va kurslarni boshqarishga yordam beraman.\n\nAsosiy funksiyalar:\n- Dorilar haqida ma’lumot olish\n- Dori kursi yaratish\n- Eslatma yuborish va ichim logini saqlash\n- Kunlik va oylik statistikalarni ko‘rish |
+| 🇺🇿  | O‘zbekcha (Krill) | Ассалому алейкум! 👋\nМен сизга дори-дармонларни ўз вақтда ичишингизни эслатиб туриш, дорилар ҳақида AI орқали маълумот бериш ва курсларни бошқаришда ёрдам бераман.\n\nАсосий функциялар:\n- Дорилар ҳақида маълумот олиш\n- Дори курси яратиш\n- Эслатма юбориш ва ичим логини сақлаш\n- Кунлик ва ойлик статистикаларни кўриш               |
+| 🇷🇺  | Русский           | Здравствуйте! 👋\nЯ помогу вам вовремя принимать лекарства, предоставлять информацию о лекарствах через AI и управлять курсами.\n\nОсновные функции:\n- Получение информации о лекарствах\n- Создание курса приема\n- Отправка напоминаний и запись логов\n- Просмотр ежедневной и ежемесячной статистики                                      |
+| 🇬🇧  | English           | Hello! 👋\nI help you take your medications on time, provide drug information via AI, and manage courses.\n\nMain features:\n- Get drug information\n- Create medication courses\n- Send reminders and log intake\n- View daily and monthly statistics                                                                                         |
 
-### 🔹 **config.py**
+---
 
-Tokenlar, DB URL, OpenAI API Key, sozlamalar.
+## 4. Har Bir Faylning Vazifalari va Dasturchi Mas’uliyati
 
-### 🔹 **scheduler.py**
+### 4.1 Root Fayllar
 
-APScheduler yordamida job yaratish, o‘chirish, takrorlash, eslatma yuborish.
+| Fayl             | Vazifasi                                     | Dasturchi vazifasi                                                      |
+| ---------------- | -------------------------------------------- | ----------------------------------------------------------------------- |
+| bot.py           | Botni ishga tushirish va handler’larni ulash | Dispatcher yaratish, startup/shutdown sozlash, logging                  |
+| config.py        | Konfiguratsiya ma’lumotlarini saqlash        | Bot token, OpenAI API key, DB ulanishini sozlash                        |
+| scheduler.py     | Eslatma job’larini boshqarish                | Job yaratish, yangilash, o‘chirish, “Ichdim” logikasi                   |
+| ai_client.py     | AI so‘rovlarini yuborish va javob olish      | OpenAI API integratsiyasi, caching, so‘rovlarni qayta ishlash           |
+| requirements.txt | Kutubxonalar ro‘yxati                        | Aiogram, asyncpg, apscheduler, openai va boshqa kutubxonalarni qo‘shish |
 
-### 🔹 **ai_client.py**
+### 4.2 dbx/ — Ma’lumotlar Bazasi Modullari
 
-OpenAI API chaqiruvlari, dori AI maʼlumotlari va caching.
+| Fayl                | Vazifasi                                | Dasturchi vazifasi                                                                |
+| ------------------- | --------------------------------------- | --------------------------------------------------------------------------------- |
+| connection.py       | DB ulanishini boshqarish                | Asinxron ulanish yaratish, sessiyalarni boshqarish                                |
+| schema.py           | DB jadvallarini yaratish                | CREATE TABLE skriptlarini yozish, bog‘lanishlarni belgilash                       |
+| users.py            | Foydalanuvchi ma’lumotlarini boshqarish | Qo‘shish, o‘chirish, yangilash, Telegram ID, ism, vaqt zonasi saqlash             |
+| medications.py      | Dorilar ma’lumotlarini saqlash          | Dori nomi, tarkibi, dozasi, ishlatilish sohasi va yon ta’sirlarini DB-ga kiritish |
+| ai_cache.py         | AI javoblarini cache qilish             | So‘rov va javoblarni cache’da saqlash, tezkor javob olish                         |
+| user_medications.py | Foydalanuvchi kurslarini boshqarish     | Kurs yaratish, yangilash, o‘chirish, vaqt va doza saqlash                         |
+| intake_log.py       | “Ichdim” loglarini saqlash              | Foydalanuvchi dori ichgan vaqti va statusini yozish, statistikani yangilash       |
 
-### **dbx/** — PostgreSQL moduli
+### 4.3 handlers/ — Telegram Komandalar
 
-| Fayl                | Vazifa                          |
-| ------------------- | ------------------------------- |
-| connection.py       | asyncpg yordamida DB ga ulanish |
-| schema.py           | CREATE TABLE SQL buyruqlari     |
-| users.py            | Foydalanuvchi CRUD              |
-| medications.py      | Dorilar CRUD                    |
-| ai_cache.py         | AI javoblarini kesh saqlash     |
-| user_medications.py | Foydalanuvchi kurslari          |
-| intake_log.py       | “Ichdim” loglari                |
+| Fayl          | Vazifasi                           | Dasturchi vazifasi                                                     |
+| ------------- | ---------------------------------- | ---------------------------------------------------------------------- |
+| start.py      | /start buyruqni boshqarish         | Til tanlash tugmalarini yaratish, boshlang‘ich xabar yuborish          |
+| search_med.py | Dorilarni qidirish va AI tavsiyasi | Foydalanuvchi so‘rovini qabul qilish, AI yoki DB orqali javob yuborish |
+| add_course.py | Dori kursini yaratish              | Kurs ma’lumotlarini DB-ga yozish, scheduler job’larini yaratish        |
+| reminders.py  | Eslatma tugmalarini boshqarish     | “Ichdim” va “Keyinroq eslat” tugmalarini callback bilan ishlash        |
+| help.py       | /help buyruqni boshqarish          | Botning vazifalari va yo‘riqnomani yuborish                            |
 
-### **handlers/** — Telegram komandalar
+### 4.4 utils/ — Yordamchi Funksiyalar
 
-| Fayl          | Vazifasi                       |
-| ------------- | ------------------------------ |
-| start.py      | /start — ro‘yxatdan o‘tish     |
-| search_med.py | Dori haqida AI orqali maʼlumot |
-| add_course.py | Dori kursi yaratish            |
-| reminders.py  | “Ichdim / O‘tkazdim” tugmalari |
-| help.py       | /help                          |
+| Fayl          | Vazifasi                                | Dasturchi vazifasi                                           |
+| ------------- | --------------------------------------- | ------------------------------------------------------------ |
+| validators.py | Foydalanuvchi ma’lumotlarini tekshirish | Dorilar nomi, dozasi, vaqt formatini validatsiya qilish      |
+| formatter.py  | Xabarlarni chiroyli formatlash          | Markdown yoki HTML formatida xabar yaratish                  |
+| keyboards.py  | Inline tugmalar yaratish                | Til tanlash, “Ichdim”, “Keyinroq eslat” tugmalarini yaratish |
 
-### **utils/** — yordamchi modul
+### 4.5 Docker va Deployment
 
-* validators.py — vaqt, sana, va kiruvchi maʼlumotlarni tekshirish
-* formatter.py — xabarlarni chiroyli formatlash
-* keyboards.py — Inline tugmalar
+| Fayl               | Vazifasi                                | Dasturchi vazifasi                                                      |
+| ------------------ | --------------------------------------- | ----------------------------------------------------------------------- |
+| docker-compose.yml | Loyihani konteynerlarda ishga tushirish | Bot va PostgreSQL xizmatlarini bir vaqtda ishga tushirish               |
+| Dockerfile         | Botni Docker konteyneriga joylashtirish | Python muhitini yaratish, dependencies o‘rnatish, botni ishga tushirish |
+| README.md          | Loyihani tushuntirish                   | Loyihani tavsiflash, o‘rnatish va ishga tushirish ko‘rsatmalari         |
+
+---
+
+Shu tarzda hujjat **dasturchi uchun to‘liq yo‘riqnoma**, til tanlash xabarlari, fayllar vazifalari va botning asosiy imkoniyatlari bilan tayyor bo‘ladi.
+
+---
+
+Agar xohlasang, men **shu hujjatni professional PDF/Word formatda** diagrammalar bilan birga tayyorlab berishim mumkin.
+
+Shuni qilaylikmi?
+
 
 ---
 
