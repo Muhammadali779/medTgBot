@@ -1,72 +1,82 @@
-# medTgBot
+# 🧠 MedRemind AI — AI Asosidagi Dori Eslatma Telegram Bot
 
-# **MedRemind AI — AI Asosidagi Dori Eslatma Telegram Bot (Full Project)**
+## 📌 1. Loyihaning Umumiy Maqsadi
 
-## 📌 **1. Loyihaning umumiy maqsadi**
-
-**MedRemind AI** — foydalanuvchilar uchun dori-darmonlarni **o‘z vaqtida ichishni eslatib turuvchi**, AI yordamida **dori haqida batafsil tibbiy ma’lumot beruvchi**, kurslarni boshqaruvchi **zamonaviy Telegram bot loyihasi**.
+**MedRemind AI** — foydalanuvchilarga dori-darmonlarni **o‘z vaqtida ichishni eslatadigan**, AI yordamida **dorilar haqida batafsil tibbiy maʼlumot beradigan**, hamda dori kurslarini boshqaradigan **zamonaviy Telegram bot loyihasi**.
 
 Loyiha hech qanday web-framework (**Django**, **FastAPI**) ishlatmaydi. Faqat:
 
-* **aiogram** — Telegram bot uchun
-* **PostgreSQL** — ma’lumotlar bazasi
-* **apscheduler** — rejalashtirilgan eslatmalar
-* **OpenAI API** — dori haqida AI orqali izoh yaratish
+* **aiogram** — Telegram bot yaratish uchun
+* **PostgreSQL** — maʼlumotlar bazasi uchun
+* **apscheduler** — rejalashtirilgan eslatmalar uchun
+* **OpenAI API** — AI asosidagi dori maʼlumotlarini yaratish uchun
 
-Bot quyidagi funksiyalarni bajaradi:
+### 🔹 Botning asosiy vazifalari
 
-* Foydalanuvchi retsepi asosida dorilarni necha mahal ichishi, qaysi vaqtda ichishi, ovqatdan oldin/yoki keyin ichilishi haqidagi kurs maʼlumotlarini qabul qiladi.
-* Vaqti kelganda **eslatma yuboradi**.
-* Foydalanuvchi "**Ichdim**" tugmasini bosmaguncha **har 5 daqiqada takror eslatma yuboradi**.
-* "**Dori haqida**" tugmasi orqali foydalanuvchi dorining nomini yozadi, AI esa:
+* Foydalanuvchidan **doktor tomonidan yozilgan retsept** asosida:
+
+  * Dorining nomi
+  * Necha mahal ichiladi
+  * Qaysi vaqtlarda ichiladi
+  * Ovqatdan oldin/ovqatdan keyin/inson ovqatlanayotganda ichish holati
+    kabi maʼlumotlarni qabul qiladi.
+
+* Belgilangan vaqt kelganda avtomatik tarzda **eslatma yuboradi**.
+
+* Foydalanuvchi **“Ichdim”** tugmasini bosmaguncha bot **har 5 daqiqada** takroriy eslatma yuboradi.
+
+* “**Dori haqida**” tugmasi bosilganda foydalanuvchi dorining nomini yuboradi, bot esa AI orqali quyidagi maʼlumotlarni taqdim etadi:
 
   * Tarkibi
   * Qaysi kasalliklarda ishlatilishi
   * Qanday tartibda ichilishi
   * Dozalash bo‘yicha yo‘riqnoma
-  * Yon ta’sirlari
-    haqidagi ma'lumotlarni beradi.
-* Agar foydalanuvchi: “**Mening boshim og‘riyapti, qaysi dorini tavsiya qilasan?**” desa — AI unga mos dorilarni tavsiya qiladi.
+  * Yon taʼsirlari
+
+* Foydalanuvchi umumiy simptom bo‘yicha savol bersa:
+
+  **Misol:** “Mening boshim og‘riyapti, qanday dorini maslahat berasan?”
+
+  AI foydalanuvchi shikoyatini tahlil qilib, mos dorilarni tavsiya qiladi.
 
 ---
 
-## 🏗 **2. Loyiha arxitekturasi**
+## 🏗 2. Loyiha Arxitekturasi
 
-Loyiha 4 ta asosiy komponentga bo‘linadi:
+Loyiha quyidagi 4 ta asosiy moduldan tashkil topgan:
 
-### **1) Telegram Bot (aiogram)**
+### **1) Telegram Bot (Aiogram)**
 
 * Foydalanuvchi bilan muloqot
-* Dorilar haqida AI javoblari
-* Dori kursi yaratish
+* Dori qidirish
+* Kurs qo‘shish
 * Eslatma yuborish
-* “Ichdim” tugmasi orqali log yuritish
-* Statistikalar
+* “Ichdim” tugmasi boshqaruvi
+* Statistika chiqarish
 
-### **2) PostgreSQL Database Layer**
+### **2) PostgreSQL Database Layer (dbx/)**
 
-Alohida `db/` package ichida joylashgan:
+* SQL jadvallarni yaratish
+* CRUD amallar
+* Foydalanuvchining dorilari
+* Dori AI kesh
+* Log yozish
 
-* Ma’lumotlar bazasiga ulanish
-* SQL jadvallar yaratish
-* CRUD funksiyalar (insert/select/update/delete)
-* Kesh (AI javoblarini saqlash)
+### **3) Scheduler (APScheduler)**
 
-### **3) Scheduler (apscheduler)**
-
-* Har bir dori vaqti uchun job yaratadi
-* Vaqti kelganda eslatma yuboradi
-* “Ichdim” bosilmasa 5 daqiqada bir eslatib turadi
+* Dori vaqtlari bo‘yicha job yaratadi
+* Eslatma yuboradi
+* “Ichdim” tugmasi bosilmaguncha 5 daqiqada takrorlaydi
 
 ### **4) OpenAI AI Module**
 
-* Dorilar haqida AI asosida izoh yaratish
-* Kasallik simptomlariga mos dorilar tavsiya qilish
-* Keshdan foydalanish (tez ishlash uchun)
+* Dorilar haqida AI asosida tibbiy izoh
+* Simptom bo‘yicha mos dori tavsiyasi
+* Keshga yozish (tez ishlashi uchun)
 
 ---
 
-## 🗂 **3. Papka strukturasining to‘liq ko‘rinishi**
+## 📂 3. To‘liq Papka Struktura
 
 ```
 medremind_ai/
@@ -76,12 +86,18 @@ medremind_ai/
 │── ai_client.py
 │── requirements.txt
 │
-│── db/
-│   ├── database.py
-│   ├── models.py
-│   └── queries.py
+│── dbx/
+│   ├── __init__.py
+│   ├── connection.py
+│   ├── schema.py
+│   ├── users.py
+│   ├── medications.py
+│   ├── ai_cache.py
+│   ├── user_medications.py
+│   └── intake_log.py
 │
 │── handlers/
+│   ├── __init__.py
 │   ├── start.py
 │   ├── search_med.py
 │   ├── add_course.py
@@ -92,96 +108,65 @@ medremind_ai/
 │   ├── validators.py
 │   ├── formatter.py
 │   └── keyboards.py
+│
+│── docker-compose.yml
+│── Dockerfile
+│── README.md
 ```
 
 ---
 
-## 🗄 **4. PostgreSQL Ma’lumotlar Bazasi Modeli**
+## 📘 4. Har Bir Faylning Vazifasi
 
-### **1) users**
+### 🔹 **bot.py**
 
-| Ustun       | Tavsif              |
-| ----------- | ------------------- |
-| id          | PK                  |
-| telegram_id | Foydalanuvchi TG ID |
-| name        | Ismi                |
-| timezone    | UTC+?               |
-| created_at  | Yaralgan vaqt       |
+Botni ishga tushirish, event loop, dispatcher va handlerlarni ulash.
 
-### **2) medications**
+### 🔹 **config.py**
 
-AI tomonidan ishlatiladigan dori maʼlumotlari
+Tokenlar, DB URL, OpenAI API Key, sozlamalar.
 
-### **3) ai_drug_info_cache**
+### 🔹 **scheduler.py**
 
-AI javoblarini saqlash (tezlashtiradi)
+APScheduler yordamida job yaratish, o‘chirish, takrorlash, eslatma yuborish.
 
-### **4) user_medications**
+### 🔹 **ai_client.py**
 
-Foydalanuvchining kurslari
+OpenAI API chaqiruvlari, dori AI maʼlumotlari va caching.
 
-* Necha mahal
-* Qaysi vaqtlar
-* Kurs boshlanish/oxiri
-* Ovqatdan oldin/keyin
+### **dbx/** — PostgreSQL moduli
 
-### **5) intake_log**
+| Fayl                | Vazifa                          |
+| ------------------- | ------------------------------- |
+| connection.py       | asyncpg yordamida DB ga ulanish |
+| schema.py           | CREATE TABLE SQL buyruqlari     |
+| users.py            | Foydalanuvchi CRUD              |
+| medications.py      | Dorilar CRUD                    |
+| ai_cache.py         | AI javoblarini kesh saqlash     |
+| user_medications.py | Foydalanuvchi kurslari          |
+| intake_log.py       | “Ichdim” loglari                |
 
-“**Ichdim**” tugmasi bosilganini qayd qilish
+### **handlers/** — Telegram komandalar
 
----
+| Fayl          | Vazifasi                       |
+| ------------- | ------------------------------ |
+| start.py      | /start — ro‘yxatdan o‘tish     |
+| search_med.py | Dori haqida AI orqali maʼlumot |
+| add_course.py | Dori kursi yaratish            |
+| reminders.py  | “Ichdim / O‘tkazdim” tugmalari |
+| help.py       | /help                          |
 
-## ⚙ **5. Asosiy funksiyalar**
+### **utils/** — yordamchi modul
 
-### ✅ **1. AI orqali dori haqida maʼlumot olish**
-
-Foydalanuvchi dorining nomini yuboradi:
-`"Analgin"`
-
-Bot AI orqali to‘liq izoh beradi:
-
-* Tarkibi
-* Ishlatilish sohasi
-* Dozasi
-* Qanday tartibda ichiladi
-* Yon ta’sirlari
+* validators.py — vaqt, sana, va kiruvchi maʼlumotlarni tekshirish
+* formatter.py — xabarlarni chiroyli formatlash
+* keyboards.py — Inline tugmalar
 
 ---
 
-### ✅ **2. Dori kursi yaratish**
+## 🧬 5. AI Promptlar
 
-Foydalanuvchi:
-
-* Dorining nomini
-* Necha mahal ichishini
-* Qaysi vaqtlarda ichishini
-* Ovqatdan oldin yoki keyin
-* Kurs necha kun davom etishini
-
-kiritadi.
-
----
-
-### ✅ **3. Eslatmalar (Scheduler)**
-
-* Vaqti kelganda eslatma yuboriladi
-* "Ichdim" bosilmasa **har 5 daqiqada qayta eslatadi**
-* "Ichdim" bosilganda job to‘xtatiladi va log yoziladi
-
----
-
-### ✅ **4. AI orqali simptom bo‘yicha dori tavsiyasi**
-
-Misol:
-Foydalanuvchi yozadi:
-
-> "Mening boshim og‘riyapti, nima tavsiya qilasan?"
-
-AI simptomni tahlil qilib mos dorilarni tavsiya qiladi.
-
----
-
-## 🤖 **6. AI Funksiyasi uchun prompt**
+### 🔹 **Dori haqida AI izoh**
 
 ```
 Quyidagi dori haqida oddiy va tushunarli tibbiy izoh tayyorla:
@@ -194,7 +179,7 @@ Quyidagi dori haqida oddiy va tushunarli tibbiy izoh tayyorla:
 Dori nomi: {drug_name}
 ```
 
-Simptom bo‘yicha so‘rov uchun:
+### 🔹 **Simptom bo‘yicha tavsiya**
 
 ```
 Foydalanuvchining quyidagi shikoyatini tahlil qilib, dori tavsiyasi ber:
@@ -203,41 +188,34 @@ Foydalanuvchining quyidagi shikoyatini tahlil qilib, dori tavsiyasi ber:
 
 ---
 
-## ⏰ **7. Scheduler Ishlash Jarayoni**
+## ⏱ 6. Scheduler Ishlash Tartibi
 
-1. Foydalanuvchi kurs yaratadi
-2. DB-ga yoziladi
-3. Har bir vaqt uchun job yaratiladi
-4. Vaqti kelganda eslatma yuboriladi
-5. "Ichdim" bosilmasa — 5 daqiqadan so‘ng qayta yuboriladi
-6. "Ichdim" bosilsa — log yoziladi va job to‘xtaydi
-
----
-
-## 🧪 **8. Test Ssenariylari**
-
-1. /start bosish
-2. Dori qidirish (AI javobi chiqadi)
-3. Dori kursi yaratish
-4. Scheduler eslatma yuborishi
-5. “Ichdim” tugmasi bosish
-6. Statistikalar to‘g‘ri chiqishi
-7. AI orqali simptom bo‘yicha dori tavsiyasi
+1. Foydalanuvchi dori kursini yaratadi
+2. Malumotlar DB ga yoziladi
+3. Har bir vaqt uchun alohida scheduler job yaratiladi
+4. Belgilangan vaqtda eslatma yuboriladi
+5. “Ichdim” bosilmasa bot 5 daqiqadan so‘ng qayta yuboradi
+6. “Ichdim” bosilganda job to‘xtatiladi va intake_log ga yoziladi
 
 ---
 
-## 🚀 **9. Kelajakdagi Kengaytirish Rejasi (Roadmap)**
+## 🔬 7. Test Ssenariylari
 
-* Dorixonalar bilan integratsiya
-* Oila a’zolarini kuzatish tizimi
-* Tibbiy kartochka (Medical Card) moduli
-* API orqali klinikalar bilan integratsiya
-* Dori QR kod skaneri
+* /start orqali ro‘yxatdan o‘tish
+* AI orqali dori qidirish
+* Yangi dori kursi qo‘shish
+* Scheduler orqali signal chiqishi
+* "Ichdim" tugmasi bosilishi
+* Statistikalarni tekshirish
 
 ---
 
-Agar xohlasangiz:
-📌 **README ga rasmli diagrammalar** (UML, Architecture Map, ER Diagram) qo‘shib beraman.
-📌 Yoki **Docker compose + .env + launch script** tayyorlab beraman.
+## 🚀 8. Kelajakdagi Takomillashtirish
 
-Qanday davom ettiramiz?
+* Dorixonalar API integratsiyasi
+* Oila aʼzolarini boshqarish
+* Foydalanuvchi tibbiy kartochkasi
+* Klinikalar bilan API integratsiya
+* Dori QR kod skaneri qo‘llab-quvvatlash
+
+---
